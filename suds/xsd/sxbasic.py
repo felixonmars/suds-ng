@@ -28,7 +28,7 @@ from suds.sax import splitPrefix
 from suds.sax.parser import Parser
 from urlparse import urljoin
 from copy import copy, deepcopy
-from urllib2 import URLError, HTTPError
+from urllib2 import URLError, HTTPError, GopherError
 
 log = getLogger(__name__)
 
@@ -675,7 +675,7 @@ class Import(SchemaObject):
                     url = urljoin(self.schema.baseurl, url)
                 root = Parser().parse(url=url).root()
                 return self.schema.instance(root, url)
-            except (URLError, HTTPError):
+            except (URLError, HTTPError, GopherError):
                 msg = 'imported schema (%s) at (%s), failed' % (self.ns[1], url)
                 log.error('%s, %s', self.id, msg, exc_info=True)
                 raise Exception(msg)

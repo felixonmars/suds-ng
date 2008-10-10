@@ -315,19 +315,15 @@ class Element:
             raise Exception('append %s not-valid' % child.__class__.__name__)
         return self
     
-    def remove(self, child):
+    def removeChild(self, child):
         """
-        Remove the specified child element or attribute.
-        @param child: A child to remove.
-        @type child: L{Element}|L{Attribute}
-        @return: The detached I{child} when I{child} is an element, else None.
-        @rtype: L{Element}|None
+        Remove the specified child element.
+        @param child: A child.
+        @type child: L{Element}
+        @return: The I{child} that has been removed.
+        @rtype: L{Element}
         """
-        if isinstance(child, Element):
-            return child.detach()
-        if isinstance(child, Attribute):
-            self.attributes.remove(child)
-        return None
+        return child.detach()
             
     def replaceChild(self, child, content):
         """
@@ -340,7 +336,7 @@ class Element:
         if child not in self.children:
             raise Exception('child not-found')
         index = self.children.index(child)
-        self.remove(child)
+        self.removeChild(child)
         if not isinstance(content, list) and not isinstance(content, tuple):
             content = (content,)
         for node in content:
