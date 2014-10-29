@@ -24,6 +24,7 @@ from suds import *
 from suds.xsd import *
 from suds.sax.date import *
 from suds.xsd.sxbase import XBuiltin
+from suds.compat import long_type
 import six
 import datetime as dt
 
@@ -103,11 +104,11 @@ class XLong(XBuiltin):
     def translate(self, value, topython=True):
         if topython:
             if isinstance(value, six.string_types) and len(value):
-                return long(value)
+                return long_type(value)
             else:
                 return None
         else:
-            if isinstance(value, (int,long)):
+            if isinstance(value, six.integer_types):
                 return str(value)
             else:
                 return value

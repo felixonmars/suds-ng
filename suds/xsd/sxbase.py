@@ -476,7 +476,7 @@ class SchemaObject(object):
             return self.__unicode__()
             
     def __unicode__(self):
-        return unicode(self.str())
+        return six.text_type(self.str())
     
     def __repr__(self):
         s = []

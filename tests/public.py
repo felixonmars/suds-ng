@@ -28,7 +28,7 @@ errors = 0
 
 setup_logging()
 
-logging.getLogger('suds.transport').setLevel(logging.DEBUG)
+logging.getLogger('suds.cache').setLevel(logging.DEBUG)
 #logging.getLogger('suds.client').setLevel(logging.DEBUG)
 #logging.getLogger('suds.metrics').setLevel(logging.DEBUG)
 #logging.getLogger('suds').setLevel(logging.DEBUG)

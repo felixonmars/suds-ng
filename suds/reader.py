@@ -25,6 +25,8 @@ from suds.cache import Cache, NoCache
 from suds.store import DocumentStore
 from suds.plugin import PluginContainer
 from logging import getLogger
+import six
+import hashlib
 
 
 log = getLogger(__name__)
@@ -50,7 +52,10 @@ class Reader:
         Mangle the name by hashing the I{name} and appending I{x}.
         @return: the mangled name.
         """
-        h = abs(hash(name))
+        if six.PY2:
+            h = abs(hash(name))
+        else:
+            h = hashlib.md5(name.encode("utf-8")).hexdigest()
         return '%s-%s' % (h, x)
 
 

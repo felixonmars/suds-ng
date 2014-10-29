@@ -196,7 +196,9 @@ class Iter:
                 v = getattr(self.sobject, k)
                 return (k, v)
         raise StopIteration()
-    
+
+    __next__ = next
+
     def __keylist(self, sobject):
         keylist = sobject.__keylist__
         try:
