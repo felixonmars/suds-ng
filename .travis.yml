@@ -5,6 +5,8 @@ python:
     - "3.3"
     - "3.4"
     - "pypy"
-install:
-    - travis_retry pip install pytest
 script: py.test
+matrix:
+  allow_failures:
+    - "3.3"
+    - "3.4"
