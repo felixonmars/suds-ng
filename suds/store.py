@@ -20,7 +20,7 @@ with the suds lib.  Also, contains classes for accessing
 these documents.
 """
 
-from boto.compat import StringIO
+from six import StringIO
 from logging import getLogger
 
 log = getLogger(__name__)
