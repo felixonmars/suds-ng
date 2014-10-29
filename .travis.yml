@@ -8,5 +8,5 @@ python:
 script: py.test
 matrix:
   allow_failures:
-    - "3.3"
-    - "3.4"
+    - python: "3.3"
+    - python: "3.4"
