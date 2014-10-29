@@ -40,6 +40,21 @@ def start(url):
 
 
 try:
+    url = 'http://dev.virtualearth.net/webservices/v1/metadata/searchservice/dev.virtualearth.net.webservices.v1.search.wsdl'
+    start(url)
+    client = Client(url)
+    print(client)
+except WebFault as f:
+    errors += 1
+    print(f)
+    print(f.fault)
+except Exception as e:
+    errors += 1
+    print(e)
+    tb.print_exc()
+
+
+try:
     url = 'http://soaptest.parasoft.com/calculator.wsdl'
     start(url)
     client = Client(url)
