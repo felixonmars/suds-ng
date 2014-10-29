@@ -71,23 +71,23 @@ class Link(object):
         """
         if pA in pB.links or \
            pB in pA.links:
-            raise Exception, 'Already linked'
+            raise Exception('Already linked')
         dA = pA.domains()
         dB = pB.domains()
         for d in dA:
             if d in dB:
-                raise Exception, 'Duplicate domain "%s" found' % d
+                raise Exception('Duplicate domain "%s" found' % d)
         for d in dB:
             if d in dA:
-                raise Exception, 'Duplicate domain "%s" found' % d
+                raise Exception('Duplicate domain "%s" found' % d)
         kA = pA.keys()
         kB = pB.keys()
         for k in kA:
             if k in kB:
-                raise Exception, 'Duplicate key %s found' % k
+                raise Exception('Duplicate key %s found' % k)
         for k in kB:
             if k in kA:
-                raise Exception, 'Duplicate key %s found' % k
+                raise Exception('Duplicate key %s found' % k)
         return self
             
     def teardown(self):
@@ -181,7 +181,7 @@ class Definition:
         if len(self.classes) and \
             not isinstance(value, self.classes):
                 msg = '"%s" must be: %s' % (self.name, self.classes)
-                raise AttributeError,msg
+                raise AttributeError(msg)
                     
             
     def __repr__(self):

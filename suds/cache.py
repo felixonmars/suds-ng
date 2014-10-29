@@ -26,7 +26,7 @@ from suds.sax.parser import Parser
 from suds.sax.element import Element
 from datetime import datetime as dt
 from datetime import timedelta
-from cStringIO import StringIO
+from six.moves import cStringIO as StringIO
 from logging import getLogger
 try:
     import cPickle as pickle
@@ -162,7 +162,7 @@ class FileCache(Cache):
         @type duration: {unit:value}
         """
         if len(duration) == 1:
-            arg = duration.items()[0]
+            arg = list(duration.items())[0]
             if not arg[0] in self.units:
                 raise Exception('must be: %s' % str(self.units))
             self.duration = arg

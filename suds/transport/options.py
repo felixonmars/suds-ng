@@ -21,8 +21,9 @@ Contains classes for transport options.
 
 from suds.transport import *
 from suds.properties import *
+import six
 
-   
+
 class Options(Skin):
     """
     Options:
@@ -51,7 +52,7 @@ class Options(Skin):
             Definition('proxy', dict, {}),
             Definition('timeout', (int,float), 90),
             Definition('headers', dict, {}),
-            Definition('username', basestring, None),
-            Definition('password', basestring, None),
+            Definition('username', six.string_types, None),
+            Definition('password', six.string_types, None),
         ]
         Skin.__init__(self, domain, definitions, kwargs)

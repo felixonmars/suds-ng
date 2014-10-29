@@ -133,9 +133,10 @@ class Typed(Core):
         if current == content.type:
             self.resolver.pop()
         else:
-            raise Exception, \
+            raise Exception(
                 'content (end) mismatch: top=(%s) cont=(%s)' % \
                 (current, content)
+            )
     
     def node(self, content):
         #

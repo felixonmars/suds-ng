@@ -69,8 +69,8 @@ def isqref(object):
     return (\
         isinstance(object, tuple) and \
         len(object) == 2 and \
-        isinstance(object[0], basestring) and \
-        isinstance(object[1], basestring))
+        isinstance(object[0], six.string_types) and \
+        isinstance(object[1], six.string_types))
 
 
 class Filter:

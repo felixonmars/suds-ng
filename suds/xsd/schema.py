@@ -148,7 +148,10 @@ class SchemaCollection:
         return len(self.children)
     
     def __str__(self):
-        return unicode(self).encode('utf-8')
+        if PY2:
+            return self.__unicode__().encode('utf-8')
+        else:
+            return self.__unicode__()
     
     def __unicode__(self):
         result = ['\nschema collection']
@@ -195,7 +198,7 @@ class Schema:
         @param root: The xml root.
         @type root: L{sax.element.Element}
         @param baseurl: The base url used for importing.
-        @type baseurl: basestring
+        @type baseurl: str
         @param options: An options dictionary.
         @type options: L{options.Options}
         @param container: An optional container.
@@ -413,7 +416,10 @@ class Schema:
         return myrep.encode('utf-8')
     
     def __str__(self):
-        return unicode(self).encode('utf-8')
+        if PY2:
+            return self.__unicode__().encode('utf-8')
+        else:
+            return self.__unicode__()
     
     def __unicode__(self):
         return self.str()

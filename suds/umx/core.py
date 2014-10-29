@@ -97,7 +97,7 @@ class Core:
                 return None
             else:
                 return Text('', lang=lang)
-        if isinstance(content.text, basestring):
+        if isinstance(content.text, six.string_types):
             return Text(content.text, lang=lang)
         else:
             return content.text
@@ -119,9 +119,9 @@ class Core:
         """
         Append an attribute name/value into L{Content.data}.
         @param name: The attribute name
-        @type name: basestring
+        @type name: str
         @param value: The attribute's value
-        @type value: basestring
+        @type value: str
         @param content: The current content being unmarshalled.
         @type content: L{Content}
         """

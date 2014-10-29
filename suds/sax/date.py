@@ -25,6 +25,7 @@ from suds.xsd import *
 import time
 import datetime as dt
 import re
+import six
 
 log = getLogger(__name__)
 
@@ -49,10 +50,10 @@ class Date:
         if isinstance(date, dt.date):
             self.date = date
             return
-        if isinstance(date, basestring):
+        if isinstance(date, six.string_types):
             self.date = self.__parse(date)
             return
-        raise ValueError, type(date)
+        raise ValueError(type(date))
     
     def year(self):
         """
@@ -101,10 +102,10 @@ class Date:
             return dt.date(year, month, day)
         except:
             log.debug(s, exec_info=True)
-            raise ValueError, 'Invalid format "%s"' % s
+            raise ValueError('Invalid format "%s"' % s)
         
     def __str__(self):
-        return unicode(self)
+        return self.__unicode__()
     
     def __unicode__(self):
         return self.date.isoformat()
@@ -138,12 +139,12 @@ class Time:
         if isinstance(time, dt.time):
             self.time = time
             return
-        if isinstance(time, basestring):
+        if isinstance(time, six.string_types):
             self.time = self.__parse(time)
             if adjusted:
                 self.__adjust()
             return
-        raise ValueError, type(time)
+        raise ValueError(type(time))
     
     def hour(self):
         """
@@ -218,7 +219,7 @@ class Time:
                 return dt.time(hour, minute, second, ms)
         except:
             log.debug(s, exec_info=True)
-            raise ValueError, 'Invalid format "%s"' % s
+            raise ValueError('Invalid format "%s"' % s)
         
     def __second(self, s):
         """
@@ -253,7 +254,7 @@ class Time:
         raise Exception()
 
     def __str__(self):
-        return unicode(self)
+        return self.__unicode__()
     
     def __unicode__(self):
         time = self.time.isoformat()
@@ -288,7 +289,7 @@ class DateTime(Date,Time):
             self.datetime = \
                 dt.datetime.combine(self.date, self.time)
             return
-        if isinstance(date, basestring):
+        if isinstance(date, six.string_types):
             part = date.split('T')
             Date.__init__(self, part[0])
             Time.__init__(self, part[1], 0)
@@ -296,7 +297,7 @@ class DateTime(Date,Time):
                 dt.datetime.combine(self.date, self.time)
             self.__adjust()
             return
-        raise ValueError, type(date)
+        raise ValueError(type(date))
     
     def __adjust(self):
         """
@@ -314,7 +315,7 @@ class DateTime(Date,Time):
             log.warn('"%s" caused overflow, not-adjusted', self.datetime)
 
     def __str__(self):
-        return unicode(self)
+        return self.__unicode__()
     
     def __unicode__(self):
         s = []
@@ -358,7 +359,7 @@ class Timezone:
         """
         Split the TZ from string.
         @param s: A string containing a timezone
-        @type s: basestring
+        @type s: str
         @return: The split parts.
         @rtype: tuple
         """

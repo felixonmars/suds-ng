@@ -36,9 +36,9 @@ class Element:
     @ivar parent: The node containing this attribute
     @type parent: L{Element}
     @ivar prefix: The I{optional} namespace prefix.
-    @type prefix: basestring
+    @type prefix: str
     @ivar name: The I{unqualified} name of the attribute
-    @type name: basestring
+    @type name: str
     @ivar expns: An explicit namespace (xmlns="...").
     @type expns: (I{prefix}, I{name})
     @ivar nsprefixes: A mapping of prefixes to namespaces.
@@ -46,7 +46,7 @@ class Element:
     @ivar attributes: A list of XML attributes.
     @type attributes: [I{Attribute},]
     @ivar text: The element's I{text} content.
-    @type text: basestring
+    @type text: str
     @ivar children: A list of child elements.
     @type children: [I{Element},]
     @cvar matcher: A collection of I{lambda} for string matching.
@@ -71,7 +71,7 @@ class Element:
         @param parent: A parent element on which the path is built.
         @type parent: I{Element}
         @param path: A simple path separated by (/).
-        @type path: basestring
+        @type path: str
         @return: The leaf node of I{path}.
         @rtype: L{Element}
         """
@@ -85,7 +85,7 @@ class Element:
     def __init__(self, name, parent=None, ns=None):
         """
         @param name: The element's (tag) name.  May cotain a prefix.
-        @type name: basestring
+        @type name: str
         @param parent: An optional parent element.
         @type parent: I{Element}
         @param ns: An optional namespace
@@ -111,7 +111,7 @@ class Element:
         """
         Rename the element.
         @param name: A new name for the element.
-        @type name: basestring 
+        @type name: str 
         """
         if name is None:
             raise Exception('name (%s) not-valid' % name)
@@ -122,9 +122,9 @@ class Element:
         """
         Set the element namespace prefix.
         @param p: A new prefix for the element.
-        @type p: basestring 
+        @type p: str 
         @param u: A namespace URI to be mapped to the prefix.
-        @type u: basestring
+        @type u: str
         @return: self
         @rtype: L{Element}
         """
@@ -138,7 +138,7 @@ class Element:
         """
         Get the B{fully} qualified name of this element
         @return: The fully qualified name.
-        @rtype: basestring
+        @rtype: str
         """
         if self.prefix is None:
             return self.name
@@ -190,9 +190,9 @@ class Element:
         """
         Set an attribute's value.
         @param name: The name of the attribute.
-        @type name: basestring
+        @type name: str
         @param value: The attribute value.
-        @type value: basestring
+        @type value: str
         @see: __setitem__()
         """
         attr = self.getAttribute(name)
@@ -222,14 +222,14 @@ class Element:
         """
         Get the value of an attribute by name.
         @param name: The name of the attribute.
-        @type name: basestring
+        @type name: str
         @param ns: The optional attribute's namespace.
         @type ns: (I{prefix}, I{name})
         @param default: An optional value to be returned when either
             the attribute does not exist of has not value.
-        @type default: basestring
+        @type default: str
         @return: The attribute's value or I{default}
-        @rtype: basestring
+        @rtype: str
         @see: __getitem__()
         """
         attr = self.getAttribute(name, ns)
@@ -242,7 +242,7 @@ class Element:
         """
         Set the element's L{Text} content.
         @param value: The element's text value.
-        @type value: basestring
+        @type value: str
         @return: self
         @rtype: I{Element}
         """
@@ -256,7 +256,7 @@ class Element:
         """
         Get the element's L{Text} content with optional default
         @param default: A value to be returned when no text content exists.
-        @type default: basestring
+        @type default: str
         @return: The text content, or I{default}
         @rtype: L{Text}
         """
@@ -393,7 +393,7 @@ class Element:
         """
         Get an attribute by name and (optional) namespace
         @param name: The name of a contained attribute (may contain prefix).
-        @type name: basestring
+        @type name: str
         @param ns: An optional namespace
         @type ns: (I{prefix}, I{name})
         @param default: Returned when attribute not-found.
@@ -416,7 +416,7 @@ class Element:
         """
         Get a child by (optional) name and/or (optional) namespace.
         @param name: The name of a child element (may contain prefix).
-        @type name: basestring
+        @type name: str
         @param ns: An optional namespace used to match the child.
         @type ns: (I{prefix}, I{name})
         @param default: Returned when child not-found.
@@ -440,7 +440,7 @@ class Element:
         Get a child at I{path} where I{path} is a (/) separated
         list of element names that are expected to be children.
         @param path: A (/) separated list of element names.
-        @type path: basestring
+        @type path: str
         @return: The leaf node at the end of I{path}
         @rtype: L{Element}
         """
@@ -463,7 +463,7 @@ class Element:
         Get a list of children at I{path} where I{path} is a (/) separated
         list of element names that are expected to be children.
         @param path: A (/) separated list of element names.
-        @type path: basestring
+        @type path: str
         @return: The collection leaf nodes at the end of I{path}
         @rtype: [L{Element},...]
         """
@@ -478,7 +478,7 @@ class Element:
         """
         Get a list of children by (optional) name and/or (optional) namespace.
         @param name: The name of a child element (may contain prefix).
-        @type name: basestring
+        @type name: str
         @param ns: An optional namespace used to match the child.
         @type ns: (I{prefix}, I{name})
         @return: The list of matching children.
@@ -513,7 +513,7 @@ class Element:
         the top of the tree is reached.  Searching up the tree provides for
         inherited mappings.
         @param prefix: A namespace prefix to resolve.
-        @type prefix: basestring
+        @type prefix: str
         @param default: An optional value to be returned when the prefix
             cannot be resolved.
         @type default: (I{prefix},I{URI})
@@ -533,9 +533,9 @@ class Element:
         """
         Add or update a prefix mapping.
         @param p: A prefix.
-        @type p: basestring
+        @type p: str
         @param u: A namespace URI.
-        @type u: basestring
+        @type u: str
         @return: self
         @rtype: L{Element}
         """
@@ -546,9 +546,9 @@ class Element:
         """
         Update (redefine) a prefix mapping for the branch. 
         @param p: A prefix.
-        @type p: basestring
+        @type p: str
         @param u: A namespace URI.
-        @type u: basestring
+        @type u: str
         @return: self
         @rtype: L{Element}
         @note: This method traverses down the entire branch!
@@ -563,7 +563,7 @@ class Element:
         """
         Clear the specified prefix from the prefix mappings.
         @param prefix: A prefix to clear.
-        @type prefix: basestring
+        @type prefix: str
         @return: self
         @rtype: L{Element}
         """
@@ -577,11 +577,11 @@ class Element:
         The local mapping is searched, then it walks up the tree until
         it reaches the top or finds a match.
         @param uri: A namespace URI.
-        @type uri: basestring
+        @type uri: str
         @param default: A default prefix when not found.
-        @type default: basestring
+        @type default: str
         @return: A mapped prefix.
-        @rtype: basestring
+        @rtype: str
         """
         for item in self.nsprefixes.items():
             if item[1] == uri:
@@ -602,11 +602,11 @@ class Element:
         The local mapping is searched, then it walks up the tree until
         it reaches the top collecting all matches.
         @param uri: A namespace URI.
-        @type uri: basestring
+        @type uri: str
         @param match: A matching function L{Element.matcher}.
-        @type match: basestring
+        @type match: str
         @return: A list of mapped prefixes.
-        @rtype: [basestring,...]
+        @rtype: [str,...]
         """
         result = []
         for item in self.nsprefixes.items():
@@ -634,7 +634,7 @@ class Element:
             c.promotePrefixes()
         if self.parent is None:
             return
-        for p,u in self.nsprefixes.items():
+        for p, u in list(self.nsprefixes.items()):
             if p in self.parent.nsprefixes:
                 pu = self.parent.nsprefixes[p]
                 if pu == u:
@@ -746,13 +746,13 @@ class Element:
         @param indent: The indent to be used in formatting the output.
         @type indent: int
         @return: A I{pretty} string.
-        @rtype: basestring
+        @rtype: str
         """
         tab = '%*s'%(indent*3,'')
         result = []
         result.append('%s<%s' % (tab, self.qname()))
         result.append(self.nsdeclarations())
-        for a in [unicode(a) for a in self.attributes]:
+        for a in [six.text_type(a) for a in self.attributes]:
             result.append(' %s' % a)
         if self.isempty():
             result.append('/>')
@@ -773,12 +773,12 @@ class Element:
         """
         Get a string representation of this XML fragment.
         @return: A I{plain} string.
-        @rtype: basestring
+        @rtype: str
         """
         result = []
         result.append('<%s' % self.qname())
         result.append(self.nsdeclarations())
-        for a in [unicode(a) for a in self.attributes]:
+        for a in [six.text_type(a) for a in self.attributes]:
             result.append(' %s' % a)
         if self.isempty():
             result.append('/>')
@@ -797,7 +797,7 @@ class Element:
         Get a string representation for all namespace declarations
         as xmlns="" and xmlns:p="".
         @return: A separated list of declarations.
-        @rtype: basestring
+        @rtype: str
         """
         s = []
         myns = (None, self.expns)
@@ -916,7 +916,7 @@ class Element:
         return len(self.children)
                 
     def __getitem__(self, index):
-        if isinstance(index, basestring):
+        if isinstance(index, six.string_types):
             return self.get(index)
         else:
             if index < len(self.children):
@@ -925,7 +925,7 @@ class Element:
                 return None
         
     def __setitem__(self, index, value):
-        if isinstance(index, basestring):
+        if isinstance(index, six.string_types):
             self.set(index, value)
         else:
             if index < len(self.children) and \
@@ -943,7 +943,10 @@ class Element:
             'Element (prefix=%s, name=%s)' % (self.prefix, self.name)
     
     def __str__(self):
-        return unicode(self).encode('utf-8')
+        if PY2:
+            return self.__unicode__().encode('utf-8')
+        else:
+            return self.__unicode__()
     
     def __unicode__(self):
         return self.str()
@@ -982,6 +985,8 @@ class NodeIterator:
             return child
         except:
             raise StopIteration()
+
+    __next__ = next
 
 
 class PrefixNormalizer:

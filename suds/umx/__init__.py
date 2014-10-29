@@ -30,7 +30,7 @@ class Content(Object):
     @ivar data: The (optional) content data.
     @type data: L{Object}
     @ivar text: The (optional) content (xml) text.
-    @type text: basestring
+    @type text: str
     """
     
     extensions = []
@@ -49,8 +49,7 @@ class Content(Object):
                 v = None
                 setattr(self, name, v)
             else:
-                raise AttributeError, \
-                    'Content has no attribute %s' % name
+                raise AttributeError('Content has no attribute %s' % name)
         else:
             v = self.__dict__[name]
         return v

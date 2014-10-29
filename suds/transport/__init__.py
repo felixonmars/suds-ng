@@ -14,6 +14,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 # written by: Jeff Ortel ( jortel@redhat.com )
 
+import six
+
 """
 Contains transport interface (classes).
 """
@@ -43,6 +45,11 @@ class Request:
         @param message: The (optional) message to be send in the request.
         @type message: str
         """
+
+        if six.PY3:
+            if isinstance(url, bytes):
+                url = url.decode("utf-8")
+
         self.url = url
         self.headers = {}
         self.message = message
@@ -52,7 +59,7 @@ class Request:
         s.append('URL:%s' % self.url)
         s.append('HEADERS: %s' % self.headers)
         s.append('MESSAGE:')
-        s.append(self.message)
+        s.append(self.message.decode("utf-8"))
         return '\n'.join(s)
 
 
@@ -85,7 +92,7 @@ class Reply:
         s.append('CODE: %s' % self.code)
         s.append('HEADERS: %s' % self.headers)
         s.append('MESSAGE:')
-        s.append(self.message)
+        s.append(self.message.decode("utf-8"))
         return '\n'.join(s)
 
 

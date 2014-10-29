@@ -144,8 +144,7 @@ class ServiceDefinition:
             if t in self.types: continue
             item = (t, t)
             self.types.append(item)
-        tc = lambda x,y: cmp(x[0].name, y[0].name)
-        self.types.sort(cmp=tc)
+        self.types.sort(key=lambda x: x[0].name)
         
     def nextprefix(self):
         """
@@ -238,11 +237,14 @@ class ServiceDefinition:
         return ''.join(s)
     
     def __str__(self):
-        return unicode(self).encode('utf-8')
+        if six.PY2:
+            return self.__unicode__().encode('utf-8')
+        else:
+            return self.__unicode__()
         
     def __unicode__(self):
         try:
             return self.description()
-        except Exception, e:
+        except Exception as e:
             log.exception(e)
         return tostr(e)

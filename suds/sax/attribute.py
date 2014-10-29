@@ -32,18 +32,18 @@ class Attribute:
     @ivar parent: The node containing this attribute
     @type parent: L{element.Element}
     @ivar prefix: The I{optional} namespace prefix.
-    @type prefix: basestring
+    @type prefix: str
     @ivar name: The I{unqualified} name of the attribute
-    @type name: basestring
+    @type name: str
     @ivar value: The attribute's value
-    @type value: basestring
+    @type value: str
     """
     def __init__(self, name, value=None):
         """
         @param name: The attribute's name with I{optional} namespace prefix.
-        @type name: basestring
+        @type name: str
         @param value: The attribute's value
-        @type value: basestring 
+        @type value: str 
         """
         self.parent = None
         self.prefix, self.name = splitPrefix(name)
@@ -65,7 +65,7 @@ class Attribute:
         """
         Get the B{fully} qualified name of this attribute
         @return: The fully qualified name.
-        @rtype: basestring
+        @rtype: str
         """
         if self.prefix is None:
             return self.name
@@ -76,7 +76,7 @@ class Attribute:
         """
         Set the attributes value
         @param value: The new value (may be None)
-        @type value: basestring
+        @type value: str
         @return: self
         @rtype: L{Attribute}
         """
@@ -91,7 +91,7 @@ class Attribute:
         Get the attributes value with optional default.
         @param default: An optional value to be return when the
             attribute's has not been set.
-        @type default: basestring
+        @type default: str
         @return: The attribute's value, or I{default}
         @rtype: L{Text}
         """
@@ -125,7 +125,7 @@ class Attribute:
         """
         Resolve the specified prefix to a known namespace.
         @param prefix: A declared prefix
-        @type prefix: basestring
+        @type prefix: str
         @return: The namespace that has been mapped to I{prefix}
         @rtype: (I{prefix}, I{name})
         """
@@ -169,7 +169,10 @@ class Attribute:
 
     def __str__(self):
         """ get an xml string representation """
-        return unicode(self).encode('utf-8')
+        if six.PY2:
+            return self.__unicode__().encode('utf-8')
+        else:
+            return self.__unicode__()
     
     def __unicode__(self):
         """ get an xml string representation """

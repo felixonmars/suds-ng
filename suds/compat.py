@@ -1,8 +1,6 @@
-#!/usr/bin/python
-#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the (LGPL) GNU Lesser General Public License as
-# published by the Free Software Foundation; either version 3 of the
+# published by the Free Software Foundation; either version 3 of the 
 # License, or (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -14,22 +12,9 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-# written by: Jeff Ortel ( jortel@redhat.com )
+# written by: Felix Yan ( felixonmars@gmail.com )
 
-import suds
-from setuptools import setup, find_packages
-
-setup(
-    name="suds-ng",
-    version=suds.__version__,
-    description="Lightweight SOAP client",
-    author="Felix Yan",
-    author_email="felixonmars@gmail.com",
-    maintainer="Felix Yan",
-    maintainer_email="felixonmars@gmail.com",
-    packages=find_packages(exclude=['tests']),
-    install_requires=[
-        "six"
-    ],
-    url="https://github.com/felixonmars/suds-ng",
-)
+try:
+    long_type = long
+except NameError:
+    long_type = int

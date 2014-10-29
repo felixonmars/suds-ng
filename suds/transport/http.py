@@ -18,13 +18,13 @@
 Contains classes for basic HTTP transport implementations.
 """
 
-import urllib2 as u2
+from six.moves import urllib
 import base64
 import socket
 from suds.transport import *
 from suds.properties import Unskin
-from urlparse import urlparse
-from cookielib import CookieJar
+from six.moves.http_cookiejar import CookieJar
+import six
 from logging import getLogger
 
 log = getLogger(__name__)
@@ -57,10 +57,10 @@ class HttpTransport(Transport):
         try:
             url = request.url
             log.debug('opening (%s)', url)
-            u2request = u2.Request(url)
+            u2request = urllib.request.Request(url)
             self.proxy = self.options.proxy
             return self.u2open(u2request)
-        except u2.HTTPError, e:
+        except urllib.error.HTTPError as e:
             raise TransportError(str(e), e.code, e.fp)
 
     def send(self, request):
@@ -69,16 +69,16 @@ class HttpTransport(Transport):
         msg = request.message
         headers = request.headers
         try:
-            u2request = u2.Request(url, msg, headers)
+            u2request = urllib.request.Request(url, msg, headers)
             self.addcookies(u2request)
             self.proxy = self.options.proxy
             request.headers.update(u2request.headers)
             log.debug('sending:\n%s', request)
             fp = self.u2open(u2request)
             self.getcookies(fp, u2request)
-            result = Reply(200, fp.headers.dict, fp.read())
+            result = Reply(200, fp.headers.__dict__, fp.read())
             log.debug('received:\n%s', result)
-        except u2.HTTPError, e:
+        except urllib.error.HTTPError as e:
             if e.code in (202,204):
                 result = None
             else:
@@ -111,11 +111,7 @@ class HttpTransport(Transport):
         """
         tm = self.options.timeout
         url = self.u2opener()
-        if self.u2ver() < 2.6:
-            socket.setdefaulttimeout(tm)
-            return url.open(u2request)
-        else:
-            return url.open(u2request, timeout=tm)
+        return url.open(u2request, timeout=tm)
             
     def u2opener(self):
         """
@@ -124,7 +120,7 @@ class HttpTransport(Transport):
         @rtype: I{OpenerDirector}
         """
         if self.urlopener is None:
-            return u2.build_opener(*self.u2handlers())
+            return urllib.request.build_opener(*self.u2handlers())
         else:
             return self.urlopener
         
@@ -135,23 +131,9 @@ class HttpTransport(Transport):
         @rtype: [Handler,...]
         """
         handlers = []
-        handlers.append(u2.ProxyHandler(self.proxy))
+        handlers.append(urllib.request.ProxyHandler(self.proxy))
         return handlers
-            
-    def u2ver(self):
-        """
-        Get the major/minor version of the urllib2 lib.
-        @return: The urllib2 version.
-        @rtype: float
-        """
-        try:
-            part = u2.__version__.split('.', 1)
-            n = float('.'.join(part))
-            return n
-        except Exception, e:
-            log.exception(e)
-            return 0
-        
+
     def __deepcopy__(self, memo={}):
         clone = self.__class__()
         p = Unskin(self.options)

@@ -52,8 +52,7 @@ class Content(Object):
                 v = None
                 setattr(self, name, v)
             else:
-                raise AttributeError, \
-                    'Content has no attribute %s' % name
+                raise AttributeError('Content has no attribute %s' % name)
         else:
             v = self.__dict__[name]
         return v

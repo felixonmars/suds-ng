@@ -22,7 +22,7 @@ wsdl/xsd defined types.
 
 from logging import getLogger
 from suds import *
-from new import classobj
+import six
 
 log = getLogger(__name__)
 
@@ -95,11 +95,12 @@ class Factory:
     def subclass(cls, name, bases, dict={}):
         if not isinstance(bases, tuple):
             bases = (bases,)
-        name = name.encode('utf-8')
+        if six.PY2:
+            name = name.encode('utf-8')
         key = '.'.join((name, str(bases)))
         subclass = cls.cache.get(key)
         if subclass is None:
-            subclass = classobj(name, bases, dict)
+            subclass = type(name, bases, dict)
             cls.cache[key] = subclass
         return subclass
     
@@ -124,7 +125,7 @@ class Factory:
         return subclass(value)
 
 
-class Object:
+class Object(object):
 
     def __init__(self):
         self.__keylist__ = []
@@ -146,7 +147,7 @@ class Object:
                 self.__keylist__.remove(name)
         except:
             cls = self.__class__.__name__
-            raise AttributeError, "%s has no attribute '%s'" % (cls, name)
+            raise AttributeError("%s has no attribute '%s'" % (cls, name))
 
     def __getitem__(self, name):
         if isinstance(name, int):
@@ -169,7 +170,10 @@ class Object:
         return str(self)
 
     def __str__(self):
-        return unicode(self).encode('utf-8')
+        if six.PY2:
+            return self.__unicode__().encode('utf-8')
+        else:
+            return self.__unicode__()
     
     def __unicode__(self):
         return self.__printer__.tostr(self)
@@ -272,12 +276,12 @@ class Printer:
                 return '<empty>'
             else:
                 return self.print_dictionary(object, h, n+2, nl)
-        if isinstance(object, (list,tuple)):
+        if isinstance(object, (list, tuple)):
             if len(object) == 0:
                 return '<empty>'
             else:
                 return self.print_collection(object, h, n+2)
-        if isinstance(object, basestring):
+        if isinstance(object, six.string_types):
             return '"%s"' % tostr(object)
         return '%s' % tostr(object)
     

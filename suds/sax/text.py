@@ -20,9 +20,10 @@ Contains XML text classes.
 
 from suds import *
 from suds.sax import *
+from six import text_type
 
 
-class Text(unicode):
+class Text(text_type):
     """
     An XML text object used to represent text content.
     @ivar lang: The (optional) language flag.

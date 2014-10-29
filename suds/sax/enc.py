@@ -19,6 +19,8 @@ Provides XML I{special character} encoder classes.
 """
 
 import re
+import six
+
 
 class Encoder:
     """
@@ -46,7 +48,7 @@ class Encoder:
         @return: True if needs encoding.
         @rtype: boolean
         """
-        if isinstance(s, basestring):
+        if isinstance(s, six.string_types):
             for c in self.special:
                 if c in s:
                     return True
@@ -60,7 +62,7 @@ class Encoder:
         @return: The encoded string.
         @rtype: str
         """
-        if isinstance(s, basestring) and self.needsEncoding(s):
+        if isinstance(s, six.string_types) and self.needsEncoding(s):
             for x in self.encodings:
                 s = re.sub(x[0], x[1], s)
         return s
@@ -73,7 +75,7 @@ class Encoder:
         @return: The decoded string.
         @rtype: str
         """
-        if isinstance(s, basestring) and '&' in s:
+        if isinstance(s, six.string_types) and '&' in s:
             for x in self.decodings:
                 s = s.replace(x[0], x[1])
         return s

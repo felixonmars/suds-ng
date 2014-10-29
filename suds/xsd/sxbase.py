@@ -470,7 +470,10 @@ class SchemaObject(object):
         return ()
         
     def __str__(self):
-        return unicode(self).encode('utf-8')
+        if PY2:
+            return self.__unicode__().encode('utf-8')
+        else:
+            return self.__unicode__()
             
     def __unicode__(self):
         return unicode(self.str())
@@ -594,6 +597,8 @@ class Iter:
                 return (result, ancestry)
             self.push(result)
             return self.next()
+
+    __next__ = next
     
     def __iter__(self):
         return self

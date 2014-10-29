@@ -36,7 +36,8 @@ from suds.sax.text import Text
 from suds.sax.attribute import Attribute
 from xml.sax import make_parser, InputSource, ContentHandler
 from xml.sax.handler import feature_external_ges
-from cStringIO import StringIO
+from io import BytesIO
+import six
 
 log = getLogger(__name__)
 
@@ -49,10 +50,10 @@ class Handler(ContentHandler):
  
     def startElement(self, name, attrs):
         top = self.top()
-        node = Element(unicode(name))
+        node = Element(six.text_type(name))
         for a in attrs.getNames():
-            n = unicode(a)
-            v = unicode(attrs.getValue(a))
+            n = six.text_type(a)
+            v = six.text_type(attrs.getValue(a))
             attribute = Attribute(n,v)
             if self.mapPrefix(node, attribute):
                 continue
@@ -65,16 +66,16 @@ class Handler(ContentHandler):
         skip = False
         if attribute.name == 'xmlns':
             if len(attribute.value):
-                node.expns = unicode(attribute.value)
+                node.expns = six.text_type(attribute.value)
             skip = True
         elif attribute.prefix == 'xmlns':
             prefix = attribute.name
-            node.nsprefixes[prefix] = unicode(attribute.value)
+            node.nsprefixes[prefix] = six.text_type(attribute.value)
             skip = True
         return skip
  
     def endElement(self, name):
-        name = unicode(name)
+        name = six.text_type(name)
         current = self.top()
         if len(current.charbuffer):
             current.text = Text(u''.join(current.charbuffer))
@@ -88,7 +89,7 @@ class Handler(ContentHandler):
             raise Exception('malformed document')
  
     def characters(self, content):
-        text = unicode(content)
+        text = six.text_type(content)
         node = self.top()
         node.charbuffer.append(text)
 
@@ -131,8 +132,10 @@ class Parser:
             metrics.log.debug('sax (%s) duration: %s', file, timer)
             return handler.nodes[0]
         if string is not None:
+            if isinstance(string, six.text_type):
+                string = string.encode("utf-8")
             source = InputSource(None)
-            source.setByteStream(StringIO(string))
+            source.setByteStream(BytesIO(string))
             sax.parse(source)
             timer.stop()
             metrics.log.debug('%s\nsax duration: %s', string, timer)

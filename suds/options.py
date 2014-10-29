@@ -23,6 +23,7 @@ from suds.wsse import Security
 from suds.xsd.doctor import Doctor
 from suds.transport import Transport
 from suds.cache import Cache, NoCache
+import six
 
 
 class TpLinker(AutoLinker):
@@ -111,9 +112,9 @@ class Options(Skin):
             Definition('cache', Cache, NoCache()),
             Definition('faults', bool, True),
             Definition('transport', Transport, None, TpLinker()),
-            Definition('service', (int, basestring), None),
-            Definition('port', (int, basestring), None),
-            Definition('location', basestring, None),
+            Definition('service', [int] + list(six.string_types), None),
+            Definition('port', [int] + list(six.string_types), None),
+            Definition('location', six.string_types, None),
             Definition('soapheaders', (), ()),
             Definition('wsse', Security, None),
             Definition('doctor', Doctor, None),

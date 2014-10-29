@@ -21,13 +21,14 @@ service proxy for Web Services.
 
 import os
 import sys
+import six
 
 #
 # Project properties
 #
 
 __version__ = '0.4.1'
-__build__="(beta) R705-20101207"
+__build__ = "(beta) 20141029"
 
 #
 # Exceptions
@@ -94,7 +95,7 @@ class Repr:
 
 def tostr(object, encoding=None):
     """ get a unicode safe string representation of an object """
-    if isinstance(object, basestring):
+    if isinstance(object, six.string_types):
         if encoding is None:
             return object
         else:
@@ -102,7 +103,7 @@ def tostr(object, encoding=None):
     if isinstance(object, tuple):
         s = ['(']
         for item in object:
-            if isinstance(item, basestring):
+            if isinstance(item, six.string_types):
                 s.append(item)
             else:
                 s.append(tostr(item))
@@ -112,7 +113,7 @@ def tostr(object, encoding=None):
     if isinstance(object, list):
         s = ['[']
         for item in object:
-            if isinstance(item, basestring):
+            if isinstance(item, six.string_types):
                 s.append(item)
             else:
                 s.append(tostr(item))
@@ -122,12 +123,12 @@ def tostr(object, encoding=None):
     if isinstance(object, dict):
         s = ['{']
         for item in object.items():
-            if isinstance(item[0], basestring):
+            if isinstance(item[0], six.string_types):
                 s.append(item[0])
             else:
                 s.append(tostr(item[0]))
             s.append(' = ')
-            if isinstance(item[1], basestring):
+            if isinstance(item[1], six.string_types):
                 s.append(item[1])
             else:
                 s.append(tostr(item[1]))
@@ -135,7 +136,7 @@ def tostr(object, encoding=None):
         s.append('}')
         return ''.join(s)
     try:
-        return unicode(object)
+        return six.text_type(object)
     except:
         return str(object)
     
@@ -151,4 +152,4 @@ def objid(obj):
         +':'+hex(id(obj))
 
 
-import client
+import suds.client

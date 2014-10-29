@@ -21,6 +21,7 @@ The I{builder} module provides an wsdl/xsd defined types factory
 from logging import getLogger
 from suds import *
 from suds.sudsobject import Factory
+import six
 
 log = getLogger(__name__)
 
@@ -37,7 +38,7 @@ class Builder:
         
     def build(self, name):
         """ build a an object for the specified typename as defined in the schema """
-        if isinstance(name, basestring):
+        if isinstance(name, six.string_types):
             type = self.resolver.find(name)
             if type is None:
                 raise TypeNotFound(name)

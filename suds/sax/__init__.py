@@ -30,6 +30,7 @@ containing the prefix and the URI.  Eg: I{('tns', 'http://myns')}
 """
 
 from suds.sax.enc import Encoder
+import six
 
 #
 # pluggable XML special character encoder.
@@ -42,11 +43,11 @@ def splitPrefix(name):
     Split the name into a tuple (I{prefix}, I{name}).  The first element in
     the tuple is I{None} when the name does't have a prefix.
     @param name: A node name containing an optional prefix.
-    @type name: basestring
+    @type name: str
     @return: A tuple containing the (2) parts of I{name}
     @rtype: (I{prefix}, I{name}) 
     """
-    if isinstance(name, basestring) \
+    if isinstance(name, six.text_type) \
         and ':' in name:
             return tuple(name.split(':', 1))
     else:
