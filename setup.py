@@ -21,13 +21,13 @@ import suds
 from setuptools import setup, find_packages
 
 setup(
-    name="suds",
+    name="suds-ng",
     version=suds.__version__,
     description="Lightweight SOAP client",
     author="Jeff Ortel",
     author_email="jortel@redhat.com",
-    maintainer="Jeff Ortel",
-    maintainer_email="jortel@redhat.com",
+    maintainer="Felix Yan",
+    maintainer_email="felixonmars@gmail.com",
     packages=find_packages(exclude=['tests']),
-    url="https://fedorahosted.org/suds",
+    url="https://github.com/felixonmars/suds-ng",
 )
