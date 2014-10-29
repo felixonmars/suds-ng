@@ -15,7 +15,7 @@
 # written by: Jeff Ortel ( jortel@redhat.com )
 
 import sys
-sys.path.append('../')
+sys.path.insert(0, '../')
 import unittest
 from suds.sax.date import Timezone as Tz
 from suds.xsd.sxbuiltin import *

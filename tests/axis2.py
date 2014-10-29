@@ -15,7 +15,7 @@
 # written by: Jeff Ortel ( jortel@redhat.com )
 
 import sys
-sys.path.append('../')
+sys.path.insert(0, '../')
 
 import logging
 import traceback as tb
