@@ -1,6 +1,6 @@
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the (LGPL) GNU Lesser General Public License as
-# published by the Free Software Foundation; either version 3 of the 
+# published by the Free Software Foundation; either version 3 of the
 # License, or (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -20,7 +20,7 @@ sys.path.insert(0, '../')
 import logging
 import traceback as tb
 import suds.metrics as metrics
-from tests import *
+from tests import setup_logging
 from suds import WebFault
 from suds.client import Client
 
@@ -28,15 +28,14 @@ errors = 0
 
 setup_logging()
 
-logging.getLogger('suds.cache').setLevel(logging.DEBUG)
-#logging.getLogger('suds.client').setLevel(logging.DEBUG)
-#logging.getLogger('suds.metrics').setLevel(logging.DEBUG)
-#logging.getLogger('suds').setLevel(logging.DEBUG)
+# logging.getLogger('suds.client').setLevel(logging.DEBUG)
+# logging.getLogger('suds.metrics').setLevel(logging.DEBUG)
+# logging.getLogger('suds').setLevel(logging.DEBUG)
 
 
 def start(url):
     global errors
-    print('\n________________________________________________________________\n' )
+    print('\n________________________________________________________________\n')
     print('Test @ ( %s ) %d' % (url, errors))
 
 
@@ -74,10 +73,10 @@ except Exception as e:
     errors += 1
     print(e)
     tb.print_exc()
-    
+
 try:
     url = 'http://jira.atlassian.com/rpc/soap/jirasoapservice-v2?wsdl'
-    start(url+'  ** cloned **')
+    start(url + '  ** cloned **')
     client = Client(url).clone()
     print('**clone**\n%s' % client)
     token = client.service.login('soaptester', 'soaptester')
@@ -88,11 +87,11 @@ except WebFault as f:
     errors += 1
     print(f)
     print(f.fault)
-except Exception as e: 
+except Exception as e:
     errors += 1
     print(e)
     tb.print_exc()
-    
+
 try:
     url = ' http://www.boyzoid.com/comp/randomQuote.cfc?wsdl '
     start(url)
@@ -107,13 +106,13 @@ except Exception as e:
     errors += 1
     print(e)
     tb.print_exc()
-    
+
 try:
     url = 'http://www.zenfolio.com/zf/api/zfapi.asmx?wsdl'
     start(url)
     client = Client(url)
     print(client)
-    #client.setport(0)
+    # client.setport(0)
     group = client.factory.create('Group')
     print('Group:\n%s' % group)
     print('LoadGroupHierarchy("demo")')
@@ -127,13 +126,13 @@ except Exception as e:
     errors += 1
     print(e)
     tb.print_exc()
-    
+
 try:
     url = 'http://cert.synxis.com/interface/ChannelConnect.asmx?WSDL'
     start(url)
     client = Client(url)
     print(client)
-    #client.setport(0)
+    # client.setport(0)
     tpa = client.factory.create('ns1:TPA_Extensions')
     print(client.service.Ping(tpa, "hello"))
 except WebFault as f:
@@ -164,10 +163,10 @@ try:
     url = 'http://ap1314-dsr.compmed.ucdavis.edu/dataserver/Aperio.Images/Image?method=wsdl'
     start(url)
     client = Client(url)
-    #print(client.factory.resolver.schema)
+    # print(client.factory.resolver.schema)
     print(client)
     print('Logon()')
-    reply = client.service.Logon('testuser','test')
+    reply = client.service.Logon('testuser', 'test')
     print(reply)
 except WebFault as f:
     errors += 1
@@ -215,7 +214,7 @@ try:
     start(url)
     client = Client(url)
     print(client)
-    #client.setport(0)
+    # client.setport(0)
     print(client.service.getBank("76251020"))
 except WebFault as f:
     errors += 1
@@ -225,7 +224,7 @@ except Exception as e:
     errors += 1
     print(e)
     tb.print_exc()
-    
+
 try:
     url = "http://arcweb.esri.com/services/v2/RouteFinder.wsdl"
     start(url)
@@ -247,7 +246,7 @@ try:
     start(url)
     timer.start()
     client = Client(url)
-    #client.setport(0)
+    # client.setport(0)
     timer.stop()
     print('create client: %s' % timer)
     timer.start()

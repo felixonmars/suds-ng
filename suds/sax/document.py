@@ -1,6 +1,6 @@
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the (LGPL) GNU Lesser General Public License as
-# published by the Free Software Foundation; either version 3 of the 
+# published by the Free Software Foundation; either version 3 of the
 # License, or (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -19,16 +19,16 @@ Provides XML I{document} classes.
 """
 
 from logging import getLogger
-from suds import *
-from suds.sax import *
+from suds.sax import splitPrefix
 from suds.sax.element import Element
 import six
 
 log = getLogger(__name__)
 
-class Document:
+
+class Document(object):
     """ An XML Document """
-    
+
     DECL = '<?xml version="1.0" encoding="UTF-8"?>'
 
     def __init__(self, root=None):
@@ -38,7 +38,7 @@ class Document:
         @type root: (L{Element}|str|None)
         """
         self.__root = None
-        self.append(root)    
+        self.append(root)
 
     def root(self):
         """
@@ -47,7 +47,7 @@ class Document:
         @rtype: L{Element}
         """
         return self.__root
-        
+
     def append(self, node):
         """
         Append (set) the document root.
@@ -61,7 +61,7 @@ class Document:
         if isinstance(node, Element):
             self.__root = node
             return
-        
+
     def getChild(self, name, ns=None, default=None):
         """
         Get a child by (optional) name and/or (optional) namespace.
@@ -86,7 +86,7 @@ class Document:
             return self.__root
         else:
             return default
-        
+
     def childAtPath(self, path):
         """
         Get a child at I{path} where I{path} is a (/) separated
@@ -100,14 +100,14 @@ class Document:
             return None
         if path[0] == '/':
             path = path[1:]
-        path = path.split('/',1)
+        path = path.split('/', 1)
         if self.getChild(path[0]) is None:
             return None
         if len(path) > 1:
             return self.__root.childAtPath(path[1])
         else:
             return self.__root
-        
+
     def childrenAtPath(self, path):
         """
         Get a list of children at I{path} where I{path} is a (/) separated
@@ -121,14 +121,14 @@ class Document:
             return []
         if path[0] == '/':
             path = path[1:]
-        path = path.split('/',1)
+        path = path.split('/', 1)
         if self.getChild(path[0]) is None:
             return []
         if len(path) > 1:
             return self.__root.childrenAtPath(path[1])
         else:
-            return [self.__root,]
-        
+            return [self.__root, ]
+
     def getChildren(self, name=None, ns=None):
         """
         Get a list of children by (optional) name and/or (optional) namespace.
@@ -146,8 +146,8 @@ class Document:
         if matched is None:
             return []
         else:
-            return [matched,]
-        
+            return [matched, ]
+
     def str(self):
         """
         Get a string representation of this XML document.
@@ -161,7 +161,7 @@ class Document:
             s.append('\n')
             s.append(root.str())
         return ''.join(s)
-    
+
     def plain(self):
         """
         Get a string representation of this XML document.
@@ -180,6 +180,6 @@ class Document:
             return self.__unicode__().encode('utf-8')
         else:
             return self.__unicode__()
-    
+
     def __unicode__(self):
         return self.str()

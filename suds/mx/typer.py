@@ -1,6 +1,6 @@
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the (LGPL) GNU Lesser General Public License as
-# published by the Free Software Foundation; either version 3 of the 
+# published by the Free Software Foundation; either version 3 of the
 # License, or (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -19,8 +19,7 @@ Provides sx typing classes.
 """
 
 from logging import getLogger
-from suds import *
-from suds.mx import *
+from suds.mx import Object
 from suds.sax import Namespace as NS
 from suds.sax.text import Text
 from suds.compat import long_type
@@ -29,7 +28,7 @@ from six import text_type
 log = getLogger(__name__)
 
 
-class Typer:
+class Typer(object):
     """
     Provides XML node typing as either automatic or manual.
     @cvar types:  A dict of class to xs type mapping.
@@ -37,15 +36,15 @@ class Typer:
     """
 
     types = {
-        int : ('int', NS.xsdns),
-        long_type : ('long', NS.xsdns),
-        float : ('float', NS.xsdns),
-        str : ('string', NS.xsdns),
-        text_type : ('string', NS.xsdns),
-        Text : ('string', NS.xsdns),
-        bool : ('boolean', NS.xsdns),
+        long_type: ('long', NS.xsdns),
+        int: ('int', NS.xsdns),
+        float: ('float', NS.xsdns),
+        str: ('string', NS.xsdns),
+        text_type: ('string', NS.xsdns),
+        Text: ('string', NS.xsdns),
+        bool: ('boolean', NS.xsdns),
     }
-                
+
     @classmethod
     def auto(cls, node, value=None):
         """
@@ -94,9 +93,9 @@ class Typer:
             ns = cls.genprefix(node, ns)
             qname = ':'.join((ns[0], tval))
             node.set(xta, qname)
-            node.addPrefix(ns[0], ns[1]) 
+            node.addPrefix(ns[0], ns[1])
         return node
-    
+
     @classmethod
     def genprefix(cls, node, ns):
         """
@@ -113,7 +112,7 @@ class Typer:
             if u is None or u == ns[1]:
                 return (p, ns[1])
         raise Exception('auto prefix, exhausted')
-    
+
     @classmethod
     def known(cls, object):
         try:
@@ -122,4 +121,3 @@ class Typer:
             return known
         except:
             pass
-

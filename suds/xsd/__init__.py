@@ -1,6 +1,6 @@
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the (LGPL) GNU Lesser General Public License as
-# published by the Free Software Foundation; either version 3 of the 
+# published by the Free Software Foundation; either version 3 of the
 # License, or (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -23,8 +23,8 @@ tranparent referenced type resolution and targeted denormalization.
 """
 
 from logging import getLogger
-from suds import *
 from suds.sax import Namespace, splitPrefix
+import six
 
 log = getLogger(__name__)
 
@@ -58,6 +58,7 @@ def qualify(ref, resolvers, defns=Namespace.default):
         ns = defns
     return (n, ns[1])
 
+
 def isqref(object):
     """
     Get whether the object is a I{qualified reference}.
@@ -66,21 +67,20 @@ def isqref(object):
     @rtype: boolean
     @see: L{qualify}
     """
-    return (\
-        isinstance(object, tuple) and \
-        len(object) == 2 and \
-        isinstance(object[0], six.string_types) and \
-        isinstance(object[1], six.string_types))
+    return (isinstance(object, tuple) and
+            len(object) == 2 and
+            isinstance(object[0], six.string_types) and
+            isinstance(object[1], six.string_types))
 
 
-class Filter:
+class Filter(object):
     def __init__(self, inclusive=False, *items):
         self.inclusive = inclusive
         self.items = items
+
     def __contains__(self, x):
         if self.inclusive:
-            result = ( x in self.items )
+            result = (x in self.items)
         else:
-            result = ( x not in self.items )
+            result = (x not in self.items)
         return result
-

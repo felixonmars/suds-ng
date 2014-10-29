@@ -1,6 +1,6 @@
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the (LGPL) GNU Lesser General Public License as
-# published by the Free Software Foundation; either version 3 of the 
+# published by the Free Software Foundation; either version 3 of the
 # License, or (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -17,10 +17,11 @@
 import sys
 sys.path.insert(0, '../')
 import unittest
-from suds.sax.date import Timezone as Tz
-from suds.xsd.sxbuiltin import *
+from suds.xsd.sxbuiltin import XDate, XTime, XDateTime
+from suds.sax.date import Timezone
 from unittest import TestCase
-from tests import *
+from tests import setup_logging
+import datetime as dt
 
 setup_logging()
 
@@ -28,28 +29,33 @@ setup_logging()
 class Date(XDate):
     def __init__(self):
         pass
+
+
 class Time(XTime):
     def __init__(self):
         pass
+
+
 class DateTime(XDateTime):
     def __init__(self):
         pass
-    
+
+
 class DateTest(TestCase):
-    
+
     def testSimple(self):
         ref = dt.date(1941, 12, 7)
         s = '%.4d-%.2d-%.2d' % (ref.year, ref.month, ref.day)
         xdate = Date()
         d = xdate.translate(s)
         self.assertEqual(d, ref)
-        
+
     def testNegativeTimezone(self):
         self.equalsTimezone(-6)
-        
+
     def testPositiveTimezone(self):
         self.equalsTimezone(6)
-        
+
     def testUtcTimezone(self):
         Timezone.LOCAL = 0
         ref = dt.date(1941, 12, 7)
@@ -57,7 +63,7 @@ class DateTest(TestCase):
         xdate = Date()
         d = xdate.translate(s)
         self.assertEqual(d, ref)
-        
+
     def equalsTimezone(self, tz):
         Timezone.LOCAL = tz
         ref = dt.date(1941, 12, 7)
@@ -67,7 +73,6 @@ class DateTest(TestCase):
         self.assertEqual(d, ref)
 
 
-  
 class TimeTest(TestCase):
 
     def testSimple(self):
@@ -76,34 +81,34 @@ class TimeTest(TestCase):
         xtime = Time()
         t = xtime.translate(s)
         self.assertEqual(t, ref)
-        
+
     def testSimpleWithShortMicrosecond(self):
         ref = dt.time(10, 30, 22, 34)
         s = '%.2d:%.2d:%.2d.%4.d' % (ref.hour, ref.minute, ref.second, ref.microsecond)
         xtime = Time()
         t = xtime.translate(s)
         self.assertEqual(t, ref)
-        
+
     def testSimpleWithMicrosecond(self):
         ref = dt.time(10, 30, 22, 999999)
         s = '%.2d:%.2d:%.2d.%4.d' % (ref.hour, ref.minute, ref.second, ref.microsecond)
         xtime = Time()
         t = xtime.translate(s)
         self.assertEqual(t, ref)
-        
+
     def testSimpleWithLongMicrosecond(self):
         ref = dt.time(10, 30, 22, 999999)
         s = '%.2d:%.2d:%.2d.%4.d' % (ref.hour, ref.minute, ref.second, int('999999999'))
         xtime = Time()
         t = xtime.translate(s)
         self.assertEqual(t, ref)
-        
+
     def testPositiveTimezone(self):
         self.equalsTimezone(6)
-        
+
     def testNegativeTimezone(self):
         self.equalsTimezone(-6)
-        
+
     def testUtcTimezone(self):
         Timezone.LOCAL = 0
         ref = dt.time(10, 30, 22)
@@ -111,7 +116,7 @@ class TimeTest(TestCase):
         xtime = Time()
         t = xtime.translate(s)
         self.assertEqual(t, ref)
-        
+
     def equalsTimezone(self, tz):
         Timezone.LOCAL = tz
         ref = dt.time(10, 30, 22)
@@ -119,107 +124,107 @@ class TimeTest(TestCase):
         xtime = Time()
         t = xtime.translate(s)
         self.assertEqual(t, ref)
-        
+
     def testConvertNegativeToGreaterNegative(self):
         Timezone.LOCAL = -6
         ref = dt.time(10, 30, 22)
         s = self.strTime(ref.hour, ref.minute, ref.second, -5)
         xtime = Time()
         t = xtime.translate(s)
-        self.assertEqual(ref.hour-1, t.hour)
+        self.assertEqual(ref.hour - 1, t.hour)
         self.assertEqual(ref.minute, t.minute)
         self.assertEqual(ref.second, t.second)
-        
+
     def testConvertNegativeToLesserNegative(self):
         Timezone.LOCAL = -5
         ref = dt.time(10, 30, 22)
         s = self.strTime(ref.hour, ref.minute, ref.second, -6)
         xtime = Time()
         t = xtime.translate(s)
-        self.assertEqual(ref.hour+1, t.hour)
+        self.assertEqual(ref.hour + 1, t.hour)
         self.assertEqual(ref.minute, t.minute)
         self.assertEqual(ref.second, t.second)
-        
+
     def testConvertPositiveToGreaterPositive(self):
         Timezone.LOCAL = 3
         ref = dt.time(10, 30, 22)
         s = self.strTime(ref.hour, ref.minute, ref.second, 2)
         xtime = Time()
         t = xtime.translate(s)
-        self.assertEqual(ref.hour+1, t.hour)
+        self.assertEqual(ref.hour + 1, t.hour)
         self.assertEqual(ref.minute, t.minute)
         self.assertEqual(ref.second, t.second)
-        
+
     def testConvertPositiveToLesserPositive(self):
         Timezone.LOCAL = 2
         ref = dt.time(10, 30, 22)
         s = self.strTime(ref.hour, ref.minute, ref.second, 3)
         xtime = Time()
         t = xtime.translate(s)
-        self.assertEqual(ref.hour-1, t.hour)
+        self.assertEqual(ref.hour - 1, t.hour)
         self.assertEqual(ref.minute, t.minute)
         self.assertEqual(ref.second, t.second)
-        
+
     def testConvertPositiveToNegative(self):
         Timezone.LOCAL = -6
         ref = dt.time(10, 30, 22)
         s = self.strTime(ref.hour, ref.minute, ref.second, 3)
         xtime = Time()
         t = xtime.translate(s)
-        self.assertEqual(ref.hour-9, t.hour)
+        self.assertEqual(ref.hour - 9, t.hour)
         self.assertEqual(ref.minute, t.minute)
         self.assertEqual(ref.second, t.second)
-        
+
     def testConvertNegativeToPositive(self):
         Timezone.LOCAL = 3
         ref = dt.time(10, 30, 22)
         s = self.strTime(ref.hour, ref.minute, ref.second, -6)
         xtime = Time()
         t = xtime.translate(s)
-        self.assertEqual(ref.hour+9, t.hour)
+        self.assertEqual(ref.hour + 9, t.hour)
         self.assertEqual(ref.minute, t.minute)
         self.assertEqual(ref.second, t.second)
-        
+
     def testConvertNegativeToUtc(self):
         Timezone.LOCAL = 0
         ref = dt.time(10, 30, 22)
         s = self.strTime(ref.hour, ref.minute, ref.second, -6)
         xtime = Time()
         t = xtime.translate(s)
-        self.assertEqual(ref.hour+6, t.hour)
+        self.assertEqual(ref.hour + 6, t.hour)
         self.assertEqual(ref.minute, t.minute)
         self.assertEqual(ref.second, t.second)
-        
+
     def testConvertPositiveToUtc(self):
         Timezone.LOCAL = 0
         ref = dt.time(10, 30, 22)
         s = self.strTime(ref.hour, ref.minute, ref.second, 3)
         xtime = Time()
         t = xtime.translate(s)
-        self.assertEqual(ref.hour-3, t.hour)
+        self.assertEqual(ref.hour - 3, t.hour)
         self.assertEqual(ref.minute, t.minute)
         self.assertEqual(ref.second, t.second)
-        
+
     def testConvertUtcToPositive(self):
         Timezone.LOCAL = 3
         ref = dt.time(10, 30, 22)
         s = '%.2d:%.2d:%.2dZ' % (ref.hour, ref.minute, ref.second)
         xtime = Time()
         t = xtime.translate(s)
-        self.assertEqual(ref.hour+3, t.hour)
+        self.assertEqual(ref.hour + 3, t.hour)
         self.assertEqual(ref.minute, t.minute)
         self.assertEqual(ref.second, t.second)
-        
+
     def testConvertUtcToNegative(self):
         Timezone.LOCAL = -6
         ref = dt.time(10, 30, 22)
         s = '%.2d:%.2d:%.2dZ' % (ref.hour, ref.minute, ref.second)
         xtime = Time()
         t = xtime.translate(s)
-        self.assertEqual(ref.hour-6, t.hour)
+        self.assertEqual(ref.hour - 6, t.hour)
         self.assertEqual(ref.minute, t.minute)
         self.assertEqual(ref.second, t.second)
-        
+
     def strTime(self, h, m, s, offset):
         return '%.2d:%.2d:%.2d%+.2d:00' % (h, m, s, offset)
 
@@ -230,286 +235,286 @@ class DateTimeTest(TestCase):
         ref = dt.datetime(1941, 12, 7, 10, 30, 22)
         s = '%.4d-%.2d-%.2dT%.2d:%.2d:%.2d' \
             % (ref.year,
-               ref.month, 
-               ref.day, 
-               ref.hour, 
-               ref.minute, 
+               ref.month,
+               ref.day,
+               ref.hour,
+               ref.minute,
                ref.second)
         xdt = DateTime()
         t = xdt.translate(s)
         self.assertEqual(t, ref)
-        
+
     def testOverflow(self):
         ref = dt.datetime(1, 1, 1, 0, 0, 0)
         s = '%.4d-%.2d-%.2dT%.2d:%.2d:%.2dZ' \
             % (ref.year,
-               ref.month, 
-               ref.day, 
-               ref.hour, 
-               ref.minute, 
+               ref.month,
+               ref.day,
+               ref.hour,
+               ref.minute,
                ref.second)
         xdt = DateTime()
         t = xdt.translate(s)
         self.assertEqual(t, ref)
-        
+
     def testSimpleWithMicrosecond(self):
         ref = dt.datetime(1941, 12, 7, 10, 30, 22, 454)
         s = '%.4d-%.2d-%.2dT%.2d:%.2d:%.2d.%.4d' \
-            % (ref.year, 
-               ref.month, 
-               ref.day, 
-               ref.hour, 
-               ref.minute, 
-               ref.second, 
+            % (ref.year,
+               ref.month,
+               ref.day,
+               ref.hour,
+               ref.minute,
+               ref.second,
                ref.microsecond)
         xdt = DateTime()
         t = xdt.translate(s)
         self.assertEqual(t, ref)
-        
+
     def testPositiveTimezone(self):
         self.equalsTimezone(6)
-        
+
     def testNegativeTimezone(self):
         self.equalsTimezone(-6)
-        
+
     def testUtcTimezone(self):
         Timezone.LOCAL = 0
         ref = dt.datetime(1941, 12, 7, 10, 30, 22)
         s = '%.4d-%.2d-%.2dT%.2d:%.2d:%.2d' \
             % (ref.year,
-               ref.month, 
-               ref.day, 
-               ref.hour, 
-               ref.minute, 
+               ref.month,
+               ref.day,
+               ref.hour,
+               ref.minute,
                ref.second)
         xdt = DateTime()
         t = xdt.translate(s)
         self.assertEqual(t, ref)
-        
+
     def equalsTimezone(self, tz):
         Timezone.LOCAL = tz
         ref = dt.datetime(1941, 12, 7, 10, 30, 22)
         s = self.strDateTime(
-                ref.year,
-                ref.month,
-                ref.day,
-                ref.hour,
-                ref.minute,
-                ref.second,
-                tz)
+            ref.year,
+            ref.month,
+            ref.day,
+            ref.hour,
+            ref.minute,
+            ref.second,
+            tz)
         xdt = DateTime()
         t = xdt.translate(s)
         self.assertEqual(t, ref)
-        
+
     def testConvertNegativeToGreaterNegative(self):
         Timezone.LOCAL = -6
         ref = dt.datetime(1941, 12, 7, 10, 30, 22)
         s = self.strDateTime(
-                ref.year,
-                ref.month,
-                ref.day,
-                ref.hour,
-                ref.minute,
-                ref.second,
-                -5)
+            ref.year,
+            ref.month,
+            ref.day,
+            ref.hour,
+            ref.minute,
+            ref.second,
+            -5)
         xdt = DateTime()
         t = xdt.translate(s)
         self.assertEqual(ref.year, t.year)
         self.assertEqual(ref.month, t.month)
         self.assertEqual(ref.day, t.day)
-        self.assertEqual(ref.hour-1, t.hour)
+        self.assertEqual(ref.hour - 1, t.hour)
         self.assertEqual(ref.minute, t.minute)
         self.assertEqual(ref.second, t.second)
-        
+
     def testConvertNegativeToLesserNegative(self):
         Timezone.LOCAL = -5
         ref = dt.datetime(1941, 12, 7, 10, 30, 22)
         s = self.strDateTime(
-                ref.year,
-                ref.month,
-                ref.day,
-                ref.hour,
-                ref.minute,
-                ref.second,
-                -6)
+            ref.year,
+            ref.month,
+            ref.day,
+            ref.hour,
+            ref.minute,
+            ref.second,
+            -6)
         xdt = DateTime()
         t = xdt.translate(s)
         self.assertEqual(ref.year, t.year)
         self.assertEqual(ref.month, t.month)
         self.assertEqual(ref.day, t.day)
-        self.assertEqual(ref.hour+1, t.hour)
+        self.assertEqual(ref.hour + 1, t.hour)
         self.assertEqual(ref.minute, t.minute)
         self.assertEqual(ref.second, t.second)
-        
+
     def testConvertPositiveToGreaterPositive(self):
         Timezone.LOCAL = 3
         ref = dt.datetime(1941, 12, 7, 10, 30, 22)
         s = self.strDateTime(
-                ref.year,
-                ref.month,
-                ref.day,
-                ref.hour,
-                ref.minute,
-                ref.second,
-                2)
+            ref.year,
+            ref.month,
+            ref.day,
+            ref.hour,
+            ref.minute,
+            ref.second,
+            2)
         xdt = DateTime()
         t = xdt.translate(s)
         self.assertEqual(ref.year, t.year)
         self.assertEqual(ref.month, t.month)
         self.assertEqual(ref.day, t.day)
-        self.assertEqual(ref.hour+1, t.hour)
+        self.assertEqual(ref.hour + 1, t.hour)
         self.assertEqual(ref.minute, t.minute)
         self.assertEqual(ref.second, t.second)
-        
+
     def testConvertPositiveToLesserPositive(self):
         Timezone.LOCAL = 2
         ref = dt.datetime(1941, 12, 7, 10, 30, 22)
         s = self.strDateTime(
-                ref.year,
-                ref.month,
-                ref.day,
-                ref.hour,
-                ref.minute,
-                ref.second,
-                3)
+            ref.year,
+            ref.month,
+            ref.day,
+            ref.hour,
+            ref.minute,
+            ref.second,
+            3)
         xdt = DateTime()
         t = xdt.translate(s)
         self.assertEqual(ref.year, t.year)
         self.assertEqual(ref.month, t.month)
         self.assertEqual(ref.day, t.day)
-        self.assertEqual(ref.hour-1, t.hour)
+        self.assertEqual(ref.hour - 1, t.hour)
         self.assertEqual(ref.minute, t.minute)
         self.assertEqual(ref.second, t.second)
-        
+
     def testConvertPositiveToNegative(self):
         Timezone.LOCAL = -6
         ref = dt.datetime(1941, 12, 7, 10, 30, 22)
         s = self.strDateTime(
-                ref.year,
-                ref.month,
-                ref.day,
-                ref.hour,
-                ref.minute,
-                ref.second,
-                3)
+            ref.year,
+            ref.month,
+            ref.day,
+            ref.hour,
+            ref.minute,
+            ref.second,
+            3)
         xdt = DateTime()
         t = xdt.translate(s)
         self.assertEqual(ref.year, t.year)
         self.assertEqual(ref.month, t.month)
         self.assertEqual(ref.day, t.day)
-        self.assertEqual(ref.hour-9, t.hour)
+        self.assertEqual(ref.hour - 9, t.hour)
         self.assertEqual(ref.minute, t.minute)
         self.assertEqual(ref.second, t.second)
-        
+
     def testConvertNegativeToPositive(self):
         Timezone.LOCAL = 3
         ref = dt.datetime(1941, 12, 7, 10, 30, 22)
         s = self.strDateTime(
-                ref.year,
-                ref.month,
-                ref.day,
-                ref.hour,
-                ref.minute,
-                ref.second,
-                -6)
+            ref.year,
+            ref.month,
+            ref.day,
+            ref.hour,
+            ref.minute,
+            ref.second,
+            -6)
         xdt = DateTime()
         t = xdt.translate(s)
         self.assertEqual(ref.year, t.year)
         self.assertEqual(ref.month, t.month)
         self.assertEqual(ref.day, t.day)
-        self.assertEqual(ref.hour+9, t.hour)
+        self.assertEqual(ref.hour + 9, t.hour)
         self.assertEqual(ref.minute, t.minute)
         self.assertEqual(ref.second, t.second)
-        
+
     def testConvertNegativeToUtc(self):
         Timezone.LOCAL = 0
         ref = dt.datetime(1941, 12, 7, 10, 30, 22)
         s = self.strDateTime(
-                ref.year,
-                ref.month,
-                ref.day,
-                ref.hour,
-                ref.minute,
-                ref.second,
-                -6)
+            ref.year,
+            ref.month,
+            ref.day,
+            ref.hour,
+            ref.minute,
+            ref.second,
+            -6)
         xdt = DateTime()
         t = xdt.translate(s)
         self.assertEqual(ref.year, t.year)
         self.assertEqual(ref.month, t.month)
         self.assertEqual(ref.day, t.day)
-        self.assertEqual(ref.hour+6, t.hour)
+        self.assertEqual(ref.hour + 6, t.hour)
         self.assertEqual(ref.minute, t.minute)
         self.assertEqual(ref.second, t.second)
-        
+
     def testConvertPositiveToUtc(self):
         Timezone.LOCAL = 0
         ref = dt.datetime(1941, 12, 7, 10, 30, 22)
         s = self.strDateTime(
-                ref.year,
-                ref.month,
-                ref.day,
-                ref.hour,
-                ref.minute,
-                ref.second,
-                3)
+            ref.year,
+            ref.month,
+            ref.day,
+            ref.hour,
+            ref.minute,
+            ref.second,
+            3)
         xdt = DateTime()
         t = xdt.translate(s)
         self.assertEqual(ref.year, t.year)
         self.assertEqual(ref.month, t.month)
         self.assertEqual(ref.day, t.day)
-        self.assertEqual(ref.hour-3, t.hour)
+        self.assertEqual(ref.hour - 3, t.hour)
         self.assertEqual(ref.minute, t.minute)
         self.assertEqual(ref.second, t.second)
-        
+
     def testConvertUtcToPositive(self):
         Timezone.LOCAL = 3
         ref = dt.datetime(1941, 12, 7, 10, 30, 22)
         s = '%.4d-%.2d-%.2dT%.2d:%.2d:%.2dZ' \
             % (ref.year,
-               ref.month, 
-               ref.day, 
-               ref.hour, 
-               ref.minute, 
+               ref.month,
+               ref.day,
+               ref.hour,
+               ref.minute,
                ref.second)
         xdt = DateTime()
         t = xdt.translate(s)
         self.assertEqual(ref.year, t.year)
         self.assertEqual(ref.month, t.month)
         self.assertEqual(ref.day, t.day)
-        self.assertEqual(ref.hour+3, t.hour)
+        self.assertEqual(ref.hour + 3, t.hour)
         self.assertEqual(ref.minute, t.minute)
         self.assertEqual(ref.second, t.second)
-        
+
     def testConvertUtcToNegative(self):
         Timezone.LOCAL = -6
         ref = dt.datetime(1941, 12, 7, 10, 30, 22)
         s = '%.4d-%.2d-%.2dT%.2d:%.2d:%.2dZ' \
             % (ref.year,
-               ref.month, 
-               ref.day, 
-               ref.hour, 
-               ref.minute, 
+               ref.month,
+               ref.day,
+               ref.hour,
+               ref.minute,
                ref.second)
         xdt = DateTime()
         t = xdt.translate(s)
         self.assertEqual(ref.year, t.year)
         self.assertEqual(ref.month, t.month)
         self.assertEqual(ref.day, t.day)
-        self.assertEqual(ref.hour-6, t.hour)
+        self.assertEqual(ref.hour - 6, t.hour)
         self.assertEqual(ref.minute, t.minute)
         self.assertEqual(ref.second, t.second)
-        
+
     def testConvertNegativeToGreaterNegativeAndPreviousDay(self):
         Timezone.LOCAL = -6
         ref = dt.datetime(1941, 12, 7, 0, 30, 22)
         s = self.strDateTime(
-                ref.year,
-                ref.month,
-                ref.day,
-                ref.hour,
-                ref.minute,
-                ref.second,
-                -5)
+            ref.year,
+            ref.month,
+            ref.day,
+            ref.hour,
+            ref.minute,
+            ref.second,
+            -5)
         xdt = DateTime()
         t = xdt.translate(s)
         self.assertEqual(ref.year, t.year)
@@ -518,18 +523,18 @@ class DateTimeTest(TestCase):
         self.assertEqual(23, t.hour)
         self.assertEqual(ref.minute, t.minute)
         self.assertEqual(ref.second, t.second)
-        
+
     def testConvertNegativeToLesserNegativeAndNextDay(self):
         Timezone.LOCAL = -5
         ref = dt.datetime(1941, 12, 7, 23, 30, 22)
         s = self.strDateTime(
-                ref.year,
-                ref.month,
-                ref.day,
-                ref.hour,
-                ref.minute,
-                ref.second,
-                -6)
+            ref.year,
+            ref.month,
+            ref.day,
+            ref.hour,
+            ref.minute,
+            ref.second,
+            -6)
         xdt = DateTime()
         t = xdt.translate(s)
         self.assertEqual(ref.year, t.year)
@@ -538,12 +543,12 @@ class DateTimeTest(TestCase):
         self.assertEqual(0, t.hour)
         self.assertEqual(ref.minute, t.minute)
         self.assertEqual(ref.second, t.second)
-        
+
     def strDateTime(self, Y, M, D, h, m, s, offset):
         s = '%.4d-%.2d-%.2dT%.2d:%.2d:%.2d%+.2d:00' \
             % (Y, M, D, h, m, s, offset)
         return s
 
-        
+
 if __name__ == '__main__':
     unittest.main()

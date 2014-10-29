@@ -1,6 +1,6 @@
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the (LGPL) GNU Lesser General Public License as
-# published by the Free Software Foundation; either version 3 of the 
+# published by the Free Software Foundation; either version 3 of the
 # License, or (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -27,9 +27,7 @@ containing the prefix and the URI.  Eg: I{('tns', 'http://myns')}
 """
 
 from logging import getLogger
-import suds.metrics
-from suds import *
-from suds.sax import *
+from suds import metrics
 from suds.sax.document import Document
 from suds.sax.element import Element
 from suds.sax.text import Text
@@ -44,24 +42,24 @@ log = getLogger(__name__)
 
 class Handler(ContentHandler):
     """ sax hanlder """
-    
+
     def __init__(self):
         self.nodes = [Document()]
- 
+
     def startElement(self, name, attrs):
         top = self.top()
         node = Element(six.text_type(name))
         for a in attrs.getNames():
             n = six.text_type(a)
             v = six.text_type(attrs.getValue(a))
-            attribute = Attribute(n,v)
+            attribute = Attribute(n, v)
             if self.mapPrefix(node, attribute):
                 continue
             node.append(attribute)
         node.charbuffer = []
         top.append(node)
         self.push(node)
-        
+
     def mapPrefix(self, node, attribute):
         skip = False
         if attribute.name == 'xmlns':
@@ -73,7 +71,7 @@ class Handler(ContentHandler):
             node.nsprefixes[prefix] = six.text_type(attribute.value)
             skip = True
         return skip
- 
+
     def endElement(self, name):
         name = six.text_type(name)
         current = self.top()
@@ -87,7 +85,7 @@ class Handler(ContentHandler):
             self.pop()
         else:
             raise Exception('malformed document')
- 
+
     def characters(self, content):
         text = six.text_type(content)
         node = self.top()
@@ -99,14 +97,14 @@ class Handler(ContentHandler):
 
     def pop(self):
         return self.nodes.pop()
- 
+
     def top(self):
-        return self.nodes[len(self.nodes)-1]
+        return self.nodes[len(self.nodes) - 1]
 
 
-class Parser:
+class Parser(object):
     """ SAX Parser """
-    
+
     @classmethod
     def saxparser(cls):
         p = make_parser()
@@ -114,7 +112,7 @@ class Parser:
         h = Handler()
         p.setContentHandler(h)
         return (p, h)
-        
+
     def parse(self, file=None, string=None):
         """
         SAX parse XML text.
