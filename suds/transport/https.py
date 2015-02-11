@@ -50,9 +50,19 @@ class HttpAuthenticated(HttpTransport):
             - B{password} - The password used for http authentication.
                     - type: I{str}
                     - default: None
+            - B{unverified_context} - Use an unverified context for the
+                 connection, i.e. disabling HTTPS certificate validation.
+                    - type: I{bool}
+                    - default: False
         """
         HttpTransport.__init__(self, **kwargs)
         self.pm = urllib.request.HTTPPasswordMgrWithDefaultRealm()
+
+        if self.options.unverified_context:
+            import ssl
+            self.HTTPSHandler = urllib.request.HTTPSHandler(context=ssl._create_unverified_context())
+        else:
+            self.HTTPSHandler = urllib.request.HTTPSHandler()
 
     def open(self, request):
         self.addcredentials(request)
@@ -73,9 +83,10 @@ class HttpAuthenticated(HttpTransport):
         return (self.options.username, self.options.password)
 
     def u2handlers(self):
-            handlers = HttpTransport.u2handlers(self)
-            handlers.append(urllib.request.HTTPBasicAuthHandler(self.pm))
-            return handlers
+        handlers = HttpTransport.u2handlers(self)
+        handlers.append(urllib.request.HTTPBasicAuthHandler(self.pm))
+        handlers.append(self.HTTPSHandler)
+        return handlers
 
 
 class WindowsHttpAuthenticated(HttpAuthenticated):

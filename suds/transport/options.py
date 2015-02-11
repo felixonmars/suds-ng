@@ -43,6 +43,10 @@ class Options(Skin):
         - B{password} - The password used for http authentication.
                 - type: I{str}
                 - default: None
+        - B{unverified_context} - Use an unverified context for the
+             connection, i.e. disabling HTTPS certificate validation.
+                - type: I{bool}
+                - default: False
     """
     def __init__(self, **kwargs):
         domain = __name__
@@ -52,5 +56,6 @@ class Options(Skin):
             Definition('headers', dict, {}),
             Definition('username', six.string_types, None),
             Definition('password', six.string_types, None),
+            Definition('unverified_context', bool, False)
         ]
         Skin.__init__(self, domain, definitions, kwargs)

@@ -40,7 +40,7 @@ def start(url):
 
 
 try:
-    url = 'http://dev.virtualearth.net/webservices/v1/metadata/searchservice/dev.virtualearth.net.webservices.v1.search.wsdl'
+    url = 'http://www.swsoft.com/webservices/vza/4.0.0/VZA.wsdl'
     start(url)
     client = Client(url)
     print(client)

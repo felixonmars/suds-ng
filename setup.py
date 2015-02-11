@@ -22,7 +22,7 @@ from setuptools import setup, find_packages
 setup(
     name="suds-ng",
     version=suds.__version__,
-    description="Lightweight SOAP client",
+    description="Lightweight SOAP client - fork of suds",
     author="Felix Yan",
     author_email="felixonmars@gmail.com",
     maintainer="Felix Yan",
