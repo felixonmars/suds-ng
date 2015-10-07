@@ -25,8 +25,8 @@ import six
 # Project properties
 #
 
-__version__ = '0.4.1'
-__build__ = "(beta) 20141029"
+__version__ = '0.4.2'
+__build__ = "(beta) 20151007"
 
 #
 # Exceptions
