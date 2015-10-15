@@ -20,12 +20,13 @@ Contains basic caching classes.
 
 import os
 import suds
-from tempfile import gettempdir as tmp
+from tempfile import mkdtemp
 from suds.sax.parser import Parser
 from suds.sax.element import Element
 from datetime import datetime as dt
 from datetime import timedelta
 from logging import getLogger
+from shutil import rmtree
 try:
     import cPickle as pickle
 except:
@@ -136,11 +137,21 @@ class FileCache(Cache):
         @type duration: {unit:value}
         """
         if location is None:
-            location = os.path.join(tmp(), 'suds')
+            location = mkdtemp(prefix='suds-')
+            self.location_is_temporary = True
+        else:
+            self.location_is_temporary = False
         self.location = location
         self.duration = (None, 0)
         self.setduration(**duration)
         self.checkversion()
+
+    def __del__(self):
+        """
+        Cleanup cache directory if it temporary.
+        """
+        if self.location_is_temporary:
+            self.clear()
 
     def fnsuffix(self):
         """
